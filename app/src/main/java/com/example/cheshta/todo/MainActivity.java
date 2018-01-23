@@ -1,5 +1,6 @@
 package com.example.cheshta.todo;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -44,17 +45,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String data = etNew.getText().toString();
-                if(!data.isEmpty()){
-                    Task t = new Task();
-                    t.setTaskName(data);
-                    t.setChecked(false);
-                    tasks.add(t);
-                    taskAdapter.notifyDataSetChanged();
-                    etNew.setText("");
-                    Toast.makeText(MainActivity.this, "Task Added", Toast.LENGTH_SHORT).show();
-                }
-                else
-                    Toast.makeText(MainActivity.this, "Add some task", Toast.LENGTH_SHORT).show();
+                etNew.setText("");
+                Intent intent = new Intent(MainActivity.this, DateTimeActivity.class);
+                intent.putExtra("task",data);
+                startActivity(intent);
             }
         });
 
