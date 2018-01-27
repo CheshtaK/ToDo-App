@@ -1,15 +1,18 @@
 package com.example.cheshta.todo;
 
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cheshta.todo.Adapter.TaskAdapter;
@@ -87,8 +90,6 @@ public class MainActivity extends AppCompatActivity {
         if(!data.isEmpty()){
             String id = mDatabase.push().getKey();
             Task t = new Task(id, data, false);
-            /*tasks.add(t);
-            taskAdapter.notifyDataSetChanged();*/
             mDatabase.child(id).setValue(t);
             etNew.setText("");
             Toast.makeText(MainActivity.this, "Task Added", Toast.LENGTH_SHORT).show();

@@ -12,6 +12,11 @@ public class Task {
     public Task() {
     }
 
+    public Task(String id, String taskName) {
+        this.id = id;
+        this.taskName = taskName;
+    }
+
     public Task(String id, String taskName, boolean checked) {
         this.id = id;
         this.taskName = taskName;
