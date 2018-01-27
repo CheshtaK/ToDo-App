@@ -5,8 +5,26 @@ package com.example.cheshta.todo.Models;
  */
 public class Task {
 
+    String id;
     String taskName;
     boolean checked;
+
+    public Task() {
+    }
+
+    public Task(String id, String taskName, boolean checked) {
+        this.id = id;
+        this.taskName = taskName;
+        this.checked = checked;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getTaskName() {
         return taskName;
