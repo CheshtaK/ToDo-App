@@ -37,6 +37,30 @@ public class MainActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                tasks.clear();
+                for(DataSnapshot taskSnapshot: dataSnapshot.getChildren()){
+                    Task task = taskSnapshot.getValue(Task.class);
+                    tasks.add(task);
+                }
+
+                taskAdapter = new TaskAdapter(MainActivity.this, tasks);
+                rvTasks.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                rvTasks.setAdapter(taskAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,33 +68,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mDatabase = FirebaseDatabase.getInstance().getReference("tasks");
-/*
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Task task = dataSnapshot.getValue(Task.class);
-                task.setTaskName(task.getTaskName());
-                Log.d(TAG, "onDataChange: " + task.getTaskName());
-                task.setChecked(false);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                Toast.makeText(MainActivity.this, "Failed to load post.", Toast.LENGTH_SHORT).show();
-            }
-        };*/
-
-//        mDatabase.addValueEventListener(postListener);
 
         rvTasks = findViewById(R.id.rvTasks);
         etNew = findViewById(R.id.etNew);
         cbDone = findViewById(R.id.cbDone);
         btnAddNew = findViewById(R.id.btnAddNew);
-
-        taskAdapter = new TaskAdapter(this, tasks);
-        rvTasks.setLayoutManager(new LinearLayoutManager(this));
-        rvTasks.setAdapter(taskAdapter);
 
         btnAddNew.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,8 +87,8 @@ public class MainActivity extends AppCompatActivity {
         if(!data.isEmpty()){
             String id = mDatabase.push().getKey();
             Task t = new Task(id, data, false);
-            tasks.add(t);
-            taskAdapter.notifyDataSetChanged();
+            /*tasks.add(t);
+            taskAdapter.notifyDataSetChanged();*/
             mDatabase.child(id).setValue(t);
             etNew.setText("");
             Toast.makeText(MainActivity.this, "Task Added", Toast.LENGTH_SHORT).show();
