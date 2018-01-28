@@ -5,14 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:hint="Enter New Task"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/etTaskEdit"/>
+
+        <EditText
+            android:hint="Enter New Task"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/etTaskEdit"/>
 
     <Button
         android:text="Update"

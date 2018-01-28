@@ -47,40 +47,44 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         final Task currentTask = tasks.get(position);
         if(currentTask!=null){
             holder.tvTask.setText(currentTask.getTaskName());
-            holder.cbDone.setText(currentTask.isCheckedAsString());
+            holder.cbDone.setChecked(currentTask.isChecked());
 
             holder.ivEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Task task = tasks.get(position);
-                    showUpdateDialog(task.getId(),task.getTaskName());
+                    showUpdateDialog(task.getId(),task.getTaskName(),task.isChecked());
                 }
             });
 
             holder.ivDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    tasks.remove(currentTask);
-                    tasks.trimToSize();
-                    notifyDataSetChanged();
+                    Task task = tasks.get(position);
+                    deleteTask(task.getId());
                 }
             });
 
             holder.cbDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("tasks").child(currentTask.getId());
                     if(b){
                         currentTask.setChecked(true);
+                        Task task = new Task(currentTask.getId(),currentTask.getTaskName(),true);
+                        databaseReference.setValue(task);
                     }
                     else {
                         currentTask.setChecked(false);
+                        Task task = new Task(currentTask.getId(),currentTask.getTaskName(),true);
+                        databaseReference.setValue(task);
                     }
                 }
             });
         }
         else {
             holder.tvTask.setText("");
-            holder.cbDone.setText(String.valueOf(false));
+            holder.cbDone.setChecked(false);
         }
     }
 
@@ -105,7 +109,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         }
     }
 
-    private void showUpdateDialog(final String id, final String taskName){
+    private void showUpdateDialog(final String id, final String taskName, final boolean checked){
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
         LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View dialogView = li.inflate(R.layout.edit_task,null);
@@ -139,5 +143,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         databaseReference.setValue(task);
         Toast.makeText(context, "Task updated successfully", Toast.LENGTH_SHORT).show();
         return true;
+    }
+
+    private void deleteTask(String id){
+        DatabaseReference drTask = FirebaseDatabase.getInstance().getReference("tasks").child(id);
+        drTask.removeValue();
+        Toast.makeText(context, "Task is deleted", Toast.LENGTH_SHORT).show();
     }
 }

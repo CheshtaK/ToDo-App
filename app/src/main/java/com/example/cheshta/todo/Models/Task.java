@@ -45,8 +45,4 @@ public class Task {
 
     public void setChecked(boolean checked) { this.checked = checked; }
 
-    public String isCheckedAsString(){
-        return String.valueOf(checked);
-    }
-
 }
